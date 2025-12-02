@@ -56,6 +56,15 @@ namespace radar_processing
         // Intensity filtering parameters
         bool enable_intensity_filter_;
         double intensity_threshold_;
+        
+        // CUDA support
+        bool use_cuda_;
+        bool cuda_available_;
+        unsigned char* d_data_;      // Device pointer for pointcloud data
+        float* d_ranges_;            // Device pointer for ranges
+        float* d_intensities_;       // Device pointer for intensities
+        size_t d_data_size_;         // Allocated device memory size
+        size_t d_ranges_size_;       // Allocated ranges array size
     };
 }; // namespace radar_processing
 

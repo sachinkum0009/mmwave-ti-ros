@@ -23,3 +23,8 @@ radar_processor:
     # Enable this to publish only high intensity points
     enable_intensity_filter: true   # Set to true to filter by intensity
     intensity_threshold: 20.0       # Minimum intensity value to keep (adjust based on your sensor)
+    
+    # GPU Acceleration (CUDA support enabled!)
+    # Use CUDA GPU for processing to minimize CPU usage
+    # Falls back to optimized CPU (OpenMP) if GPU is not available
+    use_cuda: true  # Set to false to force CPU processing
