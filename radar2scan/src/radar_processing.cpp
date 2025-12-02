@@ -52,6 +52,7 @@ namespace radar_processing
         // Process the pointcloud data
         processRadarData(*msg, laser_scan);
         
+        RCLCPP_DEBUG(this->get_logger(), "Processed LaserScan with %zu ranges", laser_scan.ranges.size());
         // Publish the laserscan
         laserscan_pub_->publish(laser_scan);
     }

@@ -1,14 +1,15 @@
 radar_processor:
   ros__parameters:
     # Angle range for the laser scan (in radians)
-    # -PI to PI covers full 360 degrees
-    angle_min: -1.571  # -90 degrees
-    angle_max: 1.571   # +90 degrees
+    # 180 degrees frontal view: from -90° to +90°
+    angle_min: -1.5708  # -90 degrees (-π/2)
+    angle_max: 1.5708   # +90 degrees (+π/2)
     
     # Angular resolution (in radians)
-    # 0.005 rad ≈ 0.286 degrees
-    # Smaller values = higher resolution but more beams
-    angle_increment: 0.005
+    # For exactly 61 rays with ceil() calculation:
+    # We need: ceil((angle_max - angle_min) / angle_increment) = 61
+    # Setting slightly smaller increment: 3.1416 / 60.5 ≈ 0.0519 rad ≈ 2.97 degrees
+    angle_increment: 0.0519
     
     # Range limits (in meters)
     range_min: 0.1   # Minimum detection range
