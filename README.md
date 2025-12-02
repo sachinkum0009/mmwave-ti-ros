@@ -7,9 +7,9 @@
 ## Commands
 
 ```bash
-ros2 launch ti_mmwave_rospkg 1843_Standard.py
+ros2 launch ti_mmwave_rospkg IWR6843.py cfg_file:=6843AOP_Standard.cfg
 
-ros2 launch ti_mmwave_rospkg IWR6843.py
+ros2 launch radar2scan radar2scan.launch.py
 ```
 
 ## Original Repo
