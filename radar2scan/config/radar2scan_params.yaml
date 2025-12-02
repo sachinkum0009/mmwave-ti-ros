@@ -1,0 +1,19 @@
+radar_processor:
+  ros__parameters:
+    # Angle range for the laser scan (in radians)
+    # -PI to PI covers full 360 degrees
+    angle_min: -1.571  # -90 degrees
+    angle_max: 1.571   # +90 degrees
+    
+    # Angular resolution (in radians)
+    # 0.005 rad ≈ 0.286 degrees
+    # Smaller values = higher resolution but more beams
+    angle_increment: 0.005
+    
+    # Range limits (in meters)
+    range_min: 0.1   # Minimum detection range
+    range_max: 10.0  # Maximum detection range
+    
+    # Frame ID for the laser scan
+    # Should match your TF tree configuration
+    frame_id: "ti_mmwave_0"
