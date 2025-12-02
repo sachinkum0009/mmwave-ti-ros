@@ -77,35 +77,44 @@ namespace radar_processing
         laser_scan.ranges.assign(num_beams, std::numeric_limits<float>::infinity());
         laser_scan.intensities.assign(num_beams, 0.0);
         
-        // Parse PointCloud2 data
-        sensor_msgs::PointCloud2ConstIterator<float> iter_x(radar_data, "x");
-        sensor_msgs::PointCloud2ConstIterator<float> iter_y(radar_data, "y");
-        sensor_msgs::PointCloud2ConstIterator<float> iter_z(radar_data, "z");
-        
         // Check if intensity field exists
         bool has_intensity = false;
-        sensor_msgs::PointCloud2ConstIterator<float> iter_intensity(radar_data, "intensity");
-        for (const auto& field : radar_data.fields) {
-            if (field.name == "intensity") {
+        int intensity_offset = -1;
+        for (size_t i = 0; i < radar_data.fields.size(); ++i) {
+            if (radar_data.fields[i].name == "intensity") {
                 has_intensity = true;
+                intensity_offset = radar_data.fields[i].offset;
                 break;
             }
         }
         
-        // Process each point in the pointcloud
-        for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
-            float x = *iter_x;
-            float y = *iter_y;
-            float z = *iter_z;
+        // Get field offsets for x, y, z
+        int x_offset = -1, y_offset = -1, z_offset = -1;
+        for (size_t i = 0; i < radar_data.fields.size(); ++i) {
+            if (radar_data.fields[i].name == "x") x_offset = radar_data.fields[i].offset;
+            if (radar_data.fields[i].name == "y") y_offset = radar_data.fields[i].offset;
+            if (radar_data.fields[i].name == "z") z_offset = radar_data.fields[i].offset;
+        }
+        
+        // Calculate number of points
+        size_t point_step = radar_data.point_step;
+        size_t num_points = radar_data.width * radar_data.height;
+        
+        // Process points in parallel using OpenMP
+        #pragma omp parallel for
+        for (size_t i = 0; i < num_points; ++i) {
+            size_t point_offset = i * point_step;
+            
+            // Extract x, y, z coordinates
+            float x = *reinterpret_cast<const float*>(&radar_data.data[point_offset + x_offset]);
+            float y = *reinterpret_cast<const float*>(&radar_data.data[point_offset + y_offset]);
+            // float z = *reinterpret_cast<const float*>(&radar_data.data[point_offset + z_offset]);
             
             // Calculate 2D range (ignoring z component for 2D scan)
             float range = std::sqrt(x * x + y * y);
             
             // Filter out points outside range limits
             if (range < range_min_ || range > range_max_) {
-                if (has_intensity) {
-                    ++iter_intensity;
-                }
                 continue;
             }
             
@@ -114,9 +123,6 @@ namespace radar_processing
             
             // Check if angle is within scan range
             if (angle < angle_min_ || angle > angle_max_) {
-                if (has_intensity) {
-                    ++iter_intensity;
-                }
                 continue;
             }
             
@@ -125,19 +131,20 @@ namespace radar_processing
             
             // Ensure beam index is within valid range
             if (beam_index >= 0 && beam_index < static_cast<int>(num_beams)) {
-                // Keep the closest point for each beam
-                if (range < laser_scan.ranges[beam_index]) {
-                    laser_scan.ranges[beam_index] = range;
-                    
-                    // Set intensity if available
-                    if (has_intensity) {
-                        laser_scan.intensities[beam_index] = *iter_intensity;
+                // Thread-safe update using critical section
+                #pragma omp critical
+                {
+                    // Keep the closest point for each beam
+                    if (range < laser_scan.ranges[beam_index]) {
+                        laser_scan.ranges[beam_index] = range;
+                        
+                        // Set intensity if available
+                        if (has_intensity) {
+                            float intensity = *reinterpret_cast<const float*>(&radar_data.data[point_offset + intensity_offset]);
+                            laser_scan.intensities[beam_index] = intensity;
+                        }
                     }
                 }
-            }
-            
-            if (has_intensity) {
-                ++iter_intensity;
             }
         }
     }

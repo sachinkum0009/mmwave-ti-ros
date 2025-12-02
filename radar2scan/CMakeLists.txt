@@ -12,11 +12,17 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(OpenMP REQUIRED)
 
 include_directories(include)
 
 add_executable(radar2scan_node src/radar_processing.cpp)
 ament_target_dependencies(radar2scan_node rclcpp sensor_msgs std_msgs)
+
+# Link OpenMP
+if(OpenMP_CXX_FOUND)
+  target_link_libraries(radar2scan_node OpenMP::OpenMP_CXX)
+endif()
 install(TARGETS
   radar2scan_node
   DESTINATION lib/${PROJECT_NAME}
