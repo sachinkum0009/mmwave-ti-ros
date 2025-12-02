@@ -12,6 +12,8 @@ namespace radar_processing
         this->declare_parameter("range_min", 0.1);
         this->declare_parameter("range_max", 10.0);
         this->declare_parameter("frame_id", "ti_mmwave_0");
+        this->declare_parameter("enable_intensity_filter", false);
+        this->declare_parameter("intensity_threshold", 50.0);
         
         angle_min_ = this->get_parameter("angle_min").as_double();
         angle_max_ = this->get_parameter("angle_max").as_double();
@@ -19,6 +21,8 @@ namespace radar_processing
         range_min_ = this->get_parameter("range_min").as_double();
         range_max_ = this->get_parameter("range_max").as_double();
         frame_id_ = this->get_parameter("frame_id").as_string();
+        enable_intensity_filter_ = this->get_parameter("enable_intensity_filter").as_bool();
+        intensity_threshold_ = this->get_parameter("intensity_threshold").as_double();
         
         // Create subscriber for radar pointcloud
         pointcloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
@@ -38,6 +42,11 @@ namespace radar_processing
         RCLCPP_INFO(this->get_logger(), "Publishing to: /radar_scan");
         RCLCPP_INFO(this->get_logger(), "Angle range: [%.2f, %.2f] rad", angle_min_, angle_max_);
         RCLCPP_INFO(this->get_logger(), "Range limits: [%.2f, %.2f] m", range_min_, range_max_);
+        if (enable_intensity_filter_) {
+            RCLCPP_INFO(this->get_logger(), "Intensity filter ENABLED: threshold = %.2f", intensity_threshold_);
+        } else {
+            RCLCPP_INFO(this->get_logger(), "Intensity filter DISABLED");
+        }
     }
 
     RadarProcessor::~RadarProcessor()
@@ -117,6 +126,14 @@ namespace radar_processing
             // Filter out points outside range limits
             if (range < range_min_ || range > range_max_) {
                 continue;
+            }
+            
+            // Apply intensity filter if enabled
+            if (enable_intensity_filter_ && has_intensity) {
+                float intensity = *reinterpret_cast<const float*>(&radar_data.data[point_offset + intensity_offset]);
+                if (intensity < intensity_threshold_) {
+                    continue;  // Skip low intensity points
+                }
             }
             
             // Calculate angle (atan2 returns angle in range [-pi, pi])

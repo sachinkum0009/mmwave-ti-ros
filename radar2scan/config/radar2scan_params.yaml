@@ -18,3 +18,8 @@ radar_processor:
     # Frame ID for the laser scan
     # Should match your TF tree configuration
     frame_id: "ti_mmwave_0"
+    
+    # Intensity filtering
+    # Enable this to publish only high intensity points
+    enable_intensity_filter: true   # Set to true to filter by intensity
+    intensity_threshold: 20.0       # Minimum intensity value to keep (adjust based on your sensor)

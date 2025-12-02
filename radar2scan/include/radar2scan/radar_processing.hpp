@@ -52,6 +52,10 @@ namespace radar_processing
         double range_min_;
         double range_max_;
         std::string frame_id_;
+        
+        // Intensity filtering parameters
+        bool enable_intensity_filter_;
+        double intensity_threshold_;
     };
 }; // namespace radar_processing
 
