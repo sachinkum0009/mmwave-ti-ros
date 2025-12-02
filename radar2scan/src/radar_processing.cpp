@@ -275,12 +275,3 @@ namespace radar_processing
     }
 
 } // namespace radar_processing
-
-int main(int argc, char** argv)
-{
-    rclcpp::init(argc, argv);
-    auto node = std::make_shared<radar_processing::RadarProcessor>();
-    rclcpp::spin(node);
-    rclcpp::shutdown();
-    return 0;
-}

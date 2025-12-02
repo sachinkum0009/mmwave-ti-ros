@@ -48,6 +48,7 @@ include_directories(include)
 # Create executable with or without CUDA
 add_executable(radar2scan_node 
   src/radar_processing.cpp
+  src/radar_processing_node.cpp
   ${CUDA_SOURCES}
 )
 
