@@ -74,8 +74,23 @@ if(USE_CUDA)
   # Set CUDA flags to avoid static library linking issues
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC")
 endif()
+
+# Create cluster-based laserscan node
+add_executable(cluster_laserscan_node
+  src/cluster_laserscan.cpp
+  src/cluster_laserscan_node.cpp
+)
+
+ament_target_dependencies(cluster_laserscan_node rclcpp sensor_msgs std_msgs)
+
+# Link OpenMP for cluster node (for potential parallel processing)
+if(OpenMP_CXX_FOUND)
+  target_link_libraries(cluster_laserscan_node OpenMP::OpenMP_CXX)
+endif()
+
 install(TARGETS
   radar2scan_node
+  cluster_laserscan_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
