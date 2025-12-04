@@ -70,3 +70,4 @@ ros2 launch radar2scan radar2scan.launch.py
 
 ## Important Links
 - [TI mmWave Demo Visualizer](https://dev.ti.com/gallery/view/mmwave/mmWave_Demo_Visualizer/ver/3.6.0/)
+- [TI mmWave Sensing Estimator](https://dev.ti.com/gallery/view/mmwave/mmWaveSensingEstimator/ver/2.5.1/)
