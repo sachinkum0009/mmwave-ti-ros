@@ -12,7 +12,7 @@ radar_processor:
     angle_increment: 0.0519
     
     # Range limits (in meters)
-    range_min: 0.1   # Minimum detection range
+    range_min: 0.2   # Minimum detection range
     range_max: 10.0  # Maximum detection range
     
     # Frame ID for the laser scan
@@ -21,10 +21,38 @@ radar_processor:
     
     # Intensity filtering
     # Enable this to publish only high intensity points
-    enable_intensity_filter: true   # Set to true to filter by intensity
-    intensity_threshold: 20.0       # Minimum intensity value to keep (adjust based on your sensor)
+    enable_intensity_filter: true # Set to true to filter by intensity
+    intensity_threshold: 12.0       # Minimum intensity value to keep (adjust based on your sensor)
     
     # GPU Acceleration (CUDA support enabled!)
     # Use CUDA GPU for processing to minimize CPU usage
     # Falls back to optimized CPU (OpenMP) if GPU is not available
     use_cuda: true  # Set to false to force CPU processing
+
+# Cluster-based LaserScan Node Configuration
+cluster_laserscan_node:
+  ros__parameters:
+    # Clustering Parameters
+    # DBSCAN-style Euclidean clustering
+    cluster_tolerance: 1.0       # Maximum distance between points in a cluster (meters)
+    min_cluster_size: 3          # Minimum number of points to form a valid cluster
+    max_cluster_size: 500        # Maximum number of points in a cluster (to filter outliers)
+    
+    # Line Generation Parameters
+    line_length: 0.5             # Fixed length of line at each cluster centroid (meters)
+    line_orientation: "perpendicular"  # "perpendicular" (to radial) or "radial" (along radial)
+    
+    # LaserScan Output Parameters
+    angle_min: -1.5708           # -90 degrees (-π/2)
+    angle_max: 1.5708            # +90 degrees (+π/2)
+    angle_increment: 0.0087      # ~0.5 degrees
+    range_min: 0.2               # Minimum detection range (meters)
+    range_max: 10.0              # Maximum detection range (meters)
+    frame_id: "ti_mmwave_0"      # Frame ID for the laser scan
+    
+    # Intensity Filtering (pre-clustering)
+    enable_intensity_filter: true   # Filter low-intensity points before clustering
+    intensity_threshold: 20.0       # Minimum intensity value to keep
+    
+    # Debug Options
+    publish_cluster_debug: false    # Publish colored cluster pointcloud for visualization
