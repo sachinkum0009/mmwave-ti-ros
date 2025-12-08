@@ -75,6 +75,8 @@ ros2 launch turtlebot3_bringup robot.launch.py
 ros2 launch ti_mmwave_rospkg IWR6843.py cfg_file:=6843AOP_Standard.cfg rviz:=false
 
 ros2 run turtlebot3_teleop teleop_keyboard
+
+ros2 run tf2_ros static_transform_publisher --frame-id base_link --child-frame-id ti_mmwave_0 --x 0 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0
 ```
 
 ## Original Repo
