@@ -28,3 +28,7 @@ radar_processor:
     # Use CUDA GPU for processing to minimize CPU usage
     # Falls back to optimized CPU (OpenMP) if GPU is not available
     use_cuda: true  # Set to false to force CPU processing
+    
+    # Bounding box visualization
+    # Size of the dummy box around each detected point (in meters)
+    box_size: 0.4  # Default 0.4m (40cm) box around each detection
