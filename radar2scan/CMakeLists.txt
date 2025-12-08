@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(OpenMP REQUIRED)
 
 # Optional CUDA support
@@ -52,7 +53,7 @@ add_executable(radar2scan_node
   ${CUDA_SOURCES}
 )
 
-ament_target_dependencies(radar2scan_node rclcpp sensor_msgs std_msgs)
+ament_target_dependencies(radar2scan_node rclcpp sensor_msgs std_msgs visualization_msgs)
 
 # Link OpenMP
 if(OpenMP_CXX_FOUND)

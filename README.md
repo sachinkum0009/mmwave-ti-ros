@@ -65,6 +65,17 @@ ros2 launch ti_mmwave_rospkg IWR6843.py cfg_file:=6843AOP_Standard.cfg rviz:=fal
 ros2 launch radar2scan radar2scan.launch.py
 ```
 
+## Commands for TB3 with mmWave Sensor
+
+```bash
+ros2 run rmw_zenoh_cpp rmw_zenohd
+
+ros2 launch turtlebot3_bringup robot.launch.py
+
+ros2 launch ti_mmwave_rospkg IWR6843.py cfg_file:=6843AOP_Standard.cfg rviz:=false
+
+ros2 run turtlebot3_teleop teleop_keyboard
+```
+
 ## Original Repo
 - https://git.ti.com/git/mmwave_radar/mmwave_ti_ros.git
-

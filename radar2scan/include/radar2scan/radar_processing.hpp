@@ -5,6 +5,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 #include <cmath>
 #include <limits>
 #include <vector>
@@ -44,6 +45,7 @@ namespace radar_processing
         // ROS2 subscriber and publisher
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_sub_;
         rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr laserscan_pub_;
+        rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;
         
         // LaserScan parameters
         double angle_min_;
@@ -56,6 +58,9 @@ namespace radar_processing
         // Intensity filtering parameters
         bool enable_intensity_filter_;
         double intensity_threshold_;
+        
+        // Visualization parameters
+        double box_size_;
         
         // CUDA support
         bool use_cuda_;
