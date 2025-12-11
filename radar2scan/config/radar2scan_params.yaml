@@ -22,7 +22,7 @@ radar_processor:
     # Intensity filtering
     # Enable this to publish only high intensity points
     enable_intensity_filter: true   # Set to true to filter by intensity
-    intensity_threshold: 19.0       # Minimum intensity value to keep (adjust based on your sensor)
+    intensity_threshold: 25.0       # Minimum intensity value to keep (adjust based on your sensor)
     
     # GPU Acceleration (CUDA support enabled!)
     # Use CUDA GPU for processing to minimize CPU usage
@@ -31,4 +31,4 @@ radar_processor:
     
     # Bounding box visualization
     # Size of the dummy box around each detected point (in meters)
-    box_size: 0.4  # Default 0.4m (40cm) box around each detection
+    box_size: 0.2  # Default 0.4m (40cm) box around each detection
